@@ -8,4 +8,6 @@ import com.easv.tkm.recipeapp.data.Models.Category
 interface CategoryDAO {
     @Insert
     fun addCategory(category: Category)
+    @Insert
+    fun addCategories(categories: List<Category>)
 }
