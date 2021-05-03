@@ -16,7 +16,7 @@ class RecipeRepository private constructor (context: Context){
     private val recipeDAO = database.recipeDAO()
     private val categoryDAO = database.categoryDAO()
 
-    suspend fun getRecipes(query: String, args: Array<Any>): List<Recipe> = recipeDAO.getRecipesFilter(SimpleSQLiteQuery(query, args)).map { r -> r.recipe }
+    suspend fun getRecipes(query: String, args: Array<Any>): List<Recipe> = recipeDAO.getRecipesFilter(SimpleSQLiteQuery(query, args))
 
 
 

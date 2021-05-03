@@ -2,6 +2,7 @@ package com.easv.tkm.recipeapp.RecyclerAdapter
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
@@ -53,13 +54,13 @@ class RecyclerAdapter: RecyclerView.Adapter<RecyclerHolder>{
 
     fun filter(text: String, category: Category?) {
 
-        var queryString: String = "SELECT * FROM Recipe, Category"
-        var containsCondition: Boolean = false
+        var queryString = "SELECT * FROM Recipe"
+        var containsCondition = false
         val args = mutableListOf<Any>()
 
         if(text.isNotEmpty()){
             queryString += " WHERE"
-            queryString += " name LIKE '%' || ? || '%'"
+            queryString += " title LIKE '%' || ? || '%'"
             args.add(text)
             containsCondition = true
         }
@@ -73,11 +74,12 @@ class RecyclerAdapter: RecyclerView.Adapter<RecyclerHolder>{
                 containsCondition = true
             }
 
-            queryString += " Category.ID = ?"
+            queryString += " categoryID = ?"
             args.add(category.id)
         }
 
         queryString += sortingType.query
+
 
         val getDataJob = GlobalScope.async {recipeRepository.getRecipes(queryString, args.toTypedArray()) }
         getDataJob.invokeOnCompletion { _ -> val myData = getDataJob.getCompleted(); this.recipeList = myData

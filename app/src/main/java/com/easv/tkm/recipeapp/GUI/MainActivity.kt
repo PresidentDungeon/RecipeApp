@@ -63,9 +63,8 @@ class MainActivity : AppCompatActivity(), IClickItemListener {
     }
 
     fun searchText(){
-//        val text: String = searchBar.text.toString()
-//        adapter.filter(text, selectedCategory)
-        Log.d("XXXXX", selectedCategory.toString())
+        val text: String = searchBar.text.toString()
+        adapter.filter(text, selectedCategory)
     }
 
     override fun onItemClick(recipe: Recipe, position: Int) {
@@ -102,7 +101,7 @@ class MainActivity : AppCompatActivity(), IClickItemListener {
             add(Category(0, "All"))
             add(Category(1, "Morgenmad"))
             add(Category(2, "Aftensmad"))
-            add(Category(2, "Dessert"))
+            add(Category(3, "Dessert"))
         }
 
         spCategory.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, categories)
