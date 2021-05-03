@@ -114,18 +114,20 @@
             android:inputType="text"
             android:textSize="15sp" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Category:" />
+
+        <Spinner
+            android:id="@+id/spCategories"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true" />
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
-            <Button
-                android:id="@+id/btnCreate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:enabled="false"
-                android:text="Create" />
 
             <LinearLayout
                 android:id="@+id/buttonLayout"
@@ -141,18 +143,25 @@
                     android:text="Back" />
 
                 <Button
+                    android:id="@+id/btnCreate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:text="Create" />
+
+                <Button
                     android:id="@+id/btnUpdate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Update"
-                    android:visibility="invisible" />
+                    android:visibility="gone" />
 
                 <Button
                     android:id="@+id/btnDelete"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Delete"
-                    android:visibility="invisible" />
+                    android:visibility="gone" />
             </LinearLayout>
         </RelativeLayout>
     </LinearLayout>

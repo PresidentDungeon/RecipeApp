@@ -1,11 +1,13 @@
 package com.easv.tkm.recipeapp.GUI
 
 import android.Manifest
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.opengl.Visibility
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -14,22 +16,26 @@ import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.Toast
+import android.view.View
+import android.widget.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.easv.tkm.recipeapp.BuildConfig
+import com.easv.tkm.recipeapp.DAL.RecipeRepository
 import com.easv.tkm.recipeapp.R
 import com.easv.tkm.recipeapp.RecyclerAdapter.RecyclerAdapter
 import com.easv.tkm.recipeapp.RecyclerAdapter.RecyclerAdapterIngredient
 import com.easv.tkm.recipeapp.data.IntentValues
+import com.easv.tkm.recipeapp.data.Models.Category
 import com.easv.tkm.recipeapp.data.Models.IngredientEntry
+import com.easv.tkm.recipeapp.data.Models.Recipe
 import com.easv.tkm.recipeapp.data.interfaces.IClickItemListener
 import kotlinx.android.synthetic.main.activity_crud.*
 import kotlinx.android.synthetic.main.activity_crud.recyclerView
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -39,6 +45,8 @@ class CrudActivity : AppCompatActivity(), IClickItemListener<IngredientEntry> {
     val PERMISSION_REQUEST_CODE_CAMERA = 1
     val ingredients: MutableList<IngredientEntry> = mutableListOf()
     var mFile: File? = null
+    private var recipeRepository = RecipeRepository.get()
+    private var selectedCategory: Category? = null
     private lateinit var adapter: RecyclerAdapterIngredient
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +54,7 @@ class CrudActivity : AppCompatActivity(), IClickItemListener<IngredientEntry> {
         setContentView(R.layout.activity_crud)
         ivImage.setOnClickListener { view -> checkCameraPermission()}
         btnAdd.setOnClickListener { view -> createIngredientEntry() }
-
+        btnBack.setOnClickListener { view ->  setResult(Activity.RESULT_CANCELED, intent); finish()}
 
         val ingredientListener = (object : TextWatcher {
             override fun afterTextChanged(s: Editable) {}
@@ -68,9 +76,28 @@ class CrudActivity : AppCompatActivity(), IClickItemListener<IngredientEntry> {
         tvDescription.addTextChangedListener(recipeListener)
         tvPreparations.addTextChangedListener(recipeListener)
 
+        spCategories.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+
+                if (position != 0) {
+                    selectedCategory = spCategories.selectedItem as Category
+                    validateRecipe()
+                }
+                else if(position == 0){
+                    selectedCategory = null
+                    validateRecipe()
+                }
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        })
+
         recyclerView.layoutManager = LinearLayoutManager(this)
         adapter = RecyclerAdapterIngredient(this, this, this.ingredients)
         recyclerView.adapter = adapter
+
+        val getDataJob = GlobalScope.async { recipeRepository.getCategories() }
+        getDataJob.invokeOnCompletion { _ -> val categoryList = getDataJob.getCompleted().toMutableList(); categoryList.add(0, Category(0, "All")); this.runOnUiThread { spCategories.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, categoryList)}}
     }
 
 
@@ -79,8 +106,26 @@ class CrudActivity : AppCompatActivity(), IClickItemListener<IngredientEntry> {
     }
 
     fun validateRecipe(){
-        this.btnCreate.isEnabled = tvTitle.text.isNotEmpty() && tvDescription.text.isNotEmpty() && tvPreparations.text.isNotEmpty() && this.ingredients.size > 0
+        this.btnCreate.isEnabled = tvTitle.text.isNotEmpty() && tvDescription.text.isNotEmpty() && tvPreparations.text.isNotEmpty() && this.ingredients.size > 0 && this.selectedCategory != null
     }
+
+    fun createRecipe(view: View) {
+        val title = tvTitle.text.toString()
+        val description = tvDescription.text.toString()
+        val preparations = tvPreparations.text.toString()
+
+        val recipe: Recipe = Recipe(0, this.selectedCategory!!.id, title, description, preparations, if(this.mFile != null && this.mFile!!.exists()) mFile!!.path else "")
+
+        //Maybe save directly from here??
+
+        val intent = Intent()
+        intent.putExtra("RECIPE_CREATE", recipe)
+        intent.putExtra("INGREDIENTENTRIES", ingredients.toTypedArray())
+        setResult(IntentValues.RESPONSE_DETAIL_CREATE.code, intent)
+        finish()
+    }
+
+
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
