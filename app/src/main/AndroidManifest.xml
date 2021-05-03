@@ -11,8 +11,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RecipeApp">
         <activity android:name=".GUI.DetailsActivity"></activity>
-        <activity android:name=".GUI.MainActivity">
         <activity android:name=".GUI.CrudActivity"></activity>
+        <activity android:name=".GUI.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
