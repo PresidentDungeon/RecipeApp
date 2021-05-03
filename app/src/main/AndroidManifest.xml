@@ -2,6 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.easv.tkm.recipeapp">
 
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-feature android:name="android.hardware.camera.any" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <application
         android:name=".data.RecipeApplication"
         android:allowBackup="true"
@@ -11,7 +20,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RecipeApp">
         <activity android:name=".GUI.CameraX"></activity>
-        <activity android:name=".GUI.CameraX" />
         <activity android:name=".GUI.DetailsActivity" />
         <activity android:name=".GUI.CrudActivity" />
         <activity android:name=".GUI.MainActivity">

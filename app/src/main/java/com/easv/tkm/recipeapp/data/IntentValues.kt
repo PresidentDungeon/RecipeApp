@@ -4,7 +4,8 @@ enum class IntentValues(val code: Int) {
 
     //Requestcodes
     REQUEST_DETAIL(1),
-    REQUESTCODE_IMAGE_DIRECT(2),
+    REQUESTCODE_IMAGE_APP(2),
+    REQUESTCODE_IMAGE_DIRECT(3),
 
     //Responsedetails
     RESPONSE_DETAIL_CREATE(1),

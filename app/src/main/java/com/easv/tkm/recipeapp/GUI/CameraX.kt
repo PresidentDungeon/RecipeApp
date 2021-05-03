@@ -27,7 +27,6 @@ class CameraX : AppCompatActivity() {
 
     private var mediaPlayer = MediaPlayer() //Plays media
 
-
     // Initializer for onCreate
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +46,6 @@ class CameraX : AppCompatActivity() {
             outputDirectory = intent.extras?.getSerializable("FILEPATH") as File
         }
     }
-
 
     //Takes the photo
     private fun takePhoto() {
@@ -141,13 +139,4 @@ class CameraX : AppCompatActivity() {
     companion object {
         private const val TAG = "CameraXBasic"
     }
-
-
-
-
-
-
-
-
-
 }
