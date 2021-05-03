@@ -12,6 +12,7 @@
         android:theme="@style/Theme.RecipeApp">
         <activity android:name=".GUI.DetailsActivity"></activity>
         <activity android:name=".GUI.MainActivity">
+        <activity android:name=".GUI.CrudActivity"></activity>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
