@@ -1,7 +1,8 @@
-package com.easv.tkm.recipeapp
+package com.easv.tkm.recipeapp.GUI
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.easv.tkm.recipeapp.R
 import com.easv.tkm.recipeapp.data.Models.Recipe
 import kotlinx.android.synthetic.main.activity_details.*
 

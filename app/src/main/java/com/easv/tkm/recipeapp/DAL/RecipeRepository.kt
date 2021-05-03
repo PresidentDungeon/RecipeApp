@@ -2,8 +2,10 @@ package com.easv.tkm.recipeapp.DAL
 
 import android.content.Context
 import androidx.room.Room
+import androidx.sqlite.db.SimpleSQLiteQuery
 import com.easv.tkm.recipeapp.Database.Database
 import com.easv.tkm.recipeapp.data.Models.Category
+import com.easv.tkm.recipeapp.data.Models.Recipe
 import com.easv.tkm.recipeapp.data.Models.RecipeWithCategories
 import java.lang.IllegalStateException
 
@@ -14,7 +16,11 @@ class RecipeRepository private constructor (context: Context){
     private val recipeDAO = database.recipeDAO()
     private val categoryDAO = database.categoryDAO()
 
-    suspend fun getRecipes(): List<RecipeWithCategories> = recipeDAO.getRecipesWithCategoriesAndIngredientEntries()
+    suspend fun getRecipes(query: String, args: Array<Any>): List<Recipe> = recipeDAO.getRecipesFilter(SimpleSQLiteQuery(query, args)).map { r -> r.recipe }
+
+
+
+
     fun addCategory(category: Category){categoryDAO.addCategory(category)}
 
     companion object{
