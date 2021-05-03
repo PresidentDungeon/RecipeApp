@@ -40,8 +40,7 @@ class MainActivity : AppCompatActivity(), IClickItemListener<Recipe> {
         adapter = RecyclerAdapter(this, this)
         recyclerView.adapter = adapter
 
-        spCategory.setOnTouchListener(View.OnTouchListener { v, event ->
-            this.userTouch = true; false})
+        spCategory.setOnTouchListener(View.OnTouchListener { v, event -> this.userTouch = true; false})
 
         spCategory.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
 
@@ -62,7 +61,8 @@ class MainActivity : AppCompatActivity(), IClickItemListener<Recipe> {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         })
 
-        this.initializeSpinner()
+        val getDataJob = GlobalScope.async { recipeRepository.getCategories() }
+        getDataJob.invokeOnCompletion { _ -> val categoryList = getDataJob.getCompleted().toMutableList(); categoryList.add(0, Category(0, "All")); this.runOnUiThread { spCategory.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, categoryList)}}
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -116,17 +116,5 @@ class MainActivity : AppCompatActivity(), IClickItemListener<Recipe> {
         job?.let {
             job.invokeOnCompletion { _ -> searchText() }
         }
-    }
-
-    fun initializeSpinner(){
-        val categories = ArrayList<Category>()
-        categories.apply {
-            add(Category(0, "All"))
-            add(Category(1, "Morgenmad"))
-            add(Category(2, "Aftensmad"))
-            add(Category(3, "Dessert"))
-        }
-
-        spCategory.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, categories)
     }
 }

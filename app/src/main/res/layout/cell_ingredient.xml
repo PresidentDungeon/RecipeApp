@@ -11,13 +11,44 @@
         android:text="NAME"
         android:textSize="20sp"
         android:layout_gravity="center"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:layout_marginRight="20dp"
+        />
+
+    <TextView
+        android:id="@+id/tvAmount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="AMOUNT"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:layout_gravity="center"
+        android:layout_marginRight="20dp"
+        />
+
+    <TextView
+        android:id="@+id/tvMeasure"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="MEASURE"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:layout_gravity="center"
+        android:layout_marginRight="20dp"
+        />
+
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
     <Button
         android:id="@+id/btnRemove"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="remove"
+        android:layout_alignParentRight="true"
+        android:backgroundTint="@color/red"
         />
 
 </LinearLayout>

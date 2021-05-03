@@ -54,11 +54,15 @@ class RecyclerHolderIngredient(view: View) : RecyclerView.ViewHolder(view) {
     lateinit var ingredient: IngredientEntry
     val view: View = view
     val tvName: TextView = view.findViewById(R.id.tvName)
+    val tvAmount: TextView = view.findViewById(R.id.tvAmount)
+    val tvMeasure: TextView = view.findViewById(R.id.tvMeasure)
     val btnRemove: Button = view.findViewById(R.id.btnRemove)
 
     fun bind(ingredient: IngredientEntry, IClickItemListener: IClickItemListener<IngredientEntry>){
         this.ingredient = ingredient
         this.tvName.text = ingredient.name
+        this.tvAmount.text = ingredient.amount.toString()
+        this.tvMeasure.text = ingredient.measurementUnit
         btnRemove.setOnClickListener { IClickItemListener.onItemClick(this.ingredient); }
     }
 

@@ -31,6 +31,7 @@ class RecipeRepository private constructor (context: Context){
     suspend fun getRecipes(query: String, args: Array<Any>): List<Recipe> = recipeDAO.getRecipesFilter(SimpleSQLiteQuery(query, args))
 
     fun addCategory(category: Category){categoryDAO.addCategory(category)}
+    suspend fun getCategories(): List<Category> = categoryDAO.getCategories()
     
     companion object{
         private var INSTANCE: RecipeRepository? = null

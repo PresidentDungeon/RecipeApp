@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -37,7 +38,6 @@ class CrudActivity : AppCompatActivity(), IClickItemListener<IngredientEntry> {
 
     val PERMISSION_REQUEST_CODE_CAMERA = 1
     val ingredients: MutableList<IngredientEntry> = mutableListOf()
-    var ingredientEntryID: Int = 0
     var mFile: File? = null
     private lateinit var adapter: RecyclerAdapterIngredient
 
@@ -48,15 +48,25 @@ class CrudActivity : AppCompatActivity(), IClickItemListener<IngredientEntry> {
         btnAdd.setOnClickListener { view -> createIngredientEntry() }
 
 
-        val listener = (object : TextWatcher {
+        val ingredientListener = (object : TextWatcher {
             override fun afterTextChanged(s: Editable) {}
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) { validateIngredientEntry() }
         })
 
-        tvName.addTextChangedListener(listener)
-        tvAmount.addTextChangedListener(listener)
-        tvUnit.addTextChangedListener(listener)
+        val recipeListener = (object : TextWatcher {
+            override fun afterTextChanged(s: Editable) {}
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) { validateRecipe() }
+        })
+
+        tvName.addTextChangedListener(ingredientListener)
+        tvAmount.addTextChangedListener(ingredientListener)
+        tvUnit.addTextChangedListener(ingredientListener)
+
+        tvTitle.addTextChangedListener(recipeListener)
+        tvDescription.addTextChangedListener(recipeListener)
+        tvPreparations.addTextChangedListener(recipeListener)
 
         recyclerView.layoutManager = LinearLayoutManager(this)
         adapter = RecyclerAdapterIngredient(this, this, this.ingredients)
@@ -68,7 +78,9 @@ class CrudActivity : AppCompatActivity(), IClickItemListener<IngredientEntry> {
         btnAdd.isEnabled = tvName.text.isNotEmpty() && tvAmount.text.isNotEmpty() && tvUnit.text.isNotEmpty()
     }
 
-
+    fun validateRecipe(){
+        this.btnCreate.isEnabled = tvTitle.text.isNotEmpty() && tvDescription.text.isNotEmpty() && tvPreparations.text.isNotEmpty() && this.ingredients.size > 0
+    }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
@@ -78,8 +90,6 @@ class CrudActivity : AppCompatActivity(), IClickItemListener<IngredientEntry> {
                 showCameraDialog()
             }
         }
-
-        this
     }
 
     private fun checkCameraPermission() {
@@ -161,11 +171,23 @@ class CrudActivity : AppCompatActivity(), IClickItemListener<IngredientEntry> {
         val ingredientEntry = IngredientEntry(0, title, amount, measureUnit)
         this.ingredients.add(ingredientEntry)
         this.adapter.updateList()
+        this.validateRecipe()
     }
 
     override fun onItemClick(ingredient: IngredientEntry) {
         this.ingredients.remove(ingredient)
         this.adapter.updateList()
+        this.validateRecipe()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        when (requestCode) {
+            IntentValues.REQUESTCODE_IMAGE_APP.code -> if (resultCode == RESULT_OK) { ivImage.setImageURI(Uri.fromFile(mFile))}
+            IntentValues.REQUESTCODE_IMAGE_DIRECT.code -> if (resultCode == RESULT_OK) { ivImage.setImageURI(Uri.fromFile(mFile))}
+            else -> false
+        }
     }
 
 
