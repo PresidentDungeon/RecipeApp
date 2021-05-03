@@ -118,13 +118,12 @@
 
             <Button
                 android:id="@+id/btnCreate"
-                android:enabled="false"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:text="Create"
-                />
+                android:enabled="false"
+                android:text="Create" />
 
             <LinearLayout
                 android:id="@+id/buttonLayout"
@@ -144,7 +143,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Update"
-                    android:visibility="invisible"/>
+                    android:visibility="invisible" />
 
                 <Button
                     android:id="@+id/btnDelete"
