@@ -23,12 +23,12 @@ class RecyclerAdapter: RecyclerView.Adapter<RecyclerHolder>{
 
     private var mInflater: LayoutInflater
     private var recipeRepository: RecipeRepository = RecipeRepository.get()
-    private var itemListener: IClickItemListener
+    private var itemListener: IClickItemListener<Recipe>
     private var recipeList: List<Recipe> = emptyList()
     private var sortingType: Sorting = Sorting.SORTING_NAME
     private var context: Context
 
-    constructor(context: Context, itemClickListener: IClickItemListener) : super(){
+    constructor(context: Context, itemClickListener: IClickItemListener<Recipe>) : super(){
         this.mInflater = LayoutInflater.from(context)
         this.itemListener = itemClickListener
         this.context = context
@@ -44,7 +44,7 @@ class RecyclerAdapter: RecyclerView.Adapter<RecyclerHolder>{
 
     override fun onBindViewHolder(holder: RecyclerHolder, position: Int) {
         val recipe = recipeList[position]
-        holder.view.setOnClickListener { view -> itemListener.onItemClick(recipe, position) }
+        holder.view.setOnClickListener { view -> itemListener.onItemClick(recipe) }
         holder.bind(recipe)
     }
 

@@ -24,7 +24,7 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 
-class MainActivity : AppCompatActivity(), IClickItemListener {
+class MainActivity : AppCompatActivity(), IClickItemListener<Recipe> {
 
     private var recipeRepository = RecipeRepository.get()
     private lateinit var adapter: RecyclerAdapter
@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity(), IClickItemListener {
         adapter.filter(text, selectedCategory)
     }
 
-    override fun onItemClick(recipe: Recipe, position: Int) {
+    override fun onItemClick(recipe: Recipe) {
         val intent = Intent(this, DetailsActivity::class.java)
         intent.putExtra("RECIPE", recipe)
         startActivityForResult(intent, IntentValues.REQUEST_DETAIL.code)
