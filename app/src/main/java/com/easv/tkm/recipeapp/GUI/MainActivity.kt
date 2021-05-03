@@ -5,6 +5,9 @@ import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -60,6 +63,26 @@ class MainActivity : AppCompatActivity(), IClickItemListener {
         })
 
         this.initializeSpinner()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.main_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        return when (item.itemId) {
+            R.id.create_recipe -> { openCreateActivity(); true }
+
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    fun openCreateActivity(){
+        val intent = Intent(this, CrudActivity::class.java)
+        startActivityForResult(intent, IntentValues.REQUEST_DETAIL.code)
     }
 
     fun searchText(){
