@@ -10,8 +10,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.RecipeApp">
-        <activity android:name=".DetailsActivity"></activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".GUI.DetailsActivity"></activity>
+        <activity android:name=".GUI.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

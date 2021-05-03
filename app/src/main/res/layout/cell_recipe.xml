@@ -18,6 +18,7 @@
         android:textSize="20dp"
         android:textStyle="bold"
         android:layout_below="@+id/ivFood"
+        android:text="FOOD TITLE"
         />
 
 </RelativeLayout>
