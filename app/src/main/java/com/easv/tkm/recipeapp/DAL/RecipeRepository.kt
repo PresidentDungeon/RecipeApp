@@ -40,7 +40,6 @@ class RecipeRepository private constructor (context: Context){
 
     }
 
-//    suspend fun getRecipes(query: String, args: Array<Any>): List<Recipe> = recipeDAO.getRecipesFilter(SimpleSQLiteQuery(query, args))
     suspend fun getRecipes(query: String, args: Array<Any>): List<RecipeWithIngredients> = recipeDAO.getRecipesFilter(SimpleSQLiteQuery(query, args))
 
     fun addCategory(category: Category){categoryDAO.addCategory(category)}

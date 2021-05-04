@@ -96,8 +96,8 @@ class MainActivity : AppCompatActivity(), IClickItemListener<RecipeWithIngredien
 
     override fun onItemClick(recipe: RecipeWithIngredients) {
         val intent = Intent(this, DetailsActivity::class.java)
-        Log.d("XXXXX", "${recipe}")
         intent.putExtra("RECIPE", recipe.recipe)
+        intent.putExtra("INGREDIENTS", recipe.ingredientEntries.toTypedArray())
         startActivityForResult(intent, IntentValues.REQUEST_DETAIL.code)
     }
 
