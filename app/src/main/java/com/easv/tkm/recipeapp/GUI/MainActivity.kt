@@ -1,7 +1,6 @@
 package com.easv.tkm.recipeapp.GUI
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -43,9 +42,7 @@ class MainActivity : AppCompatActivity(), IClickItemListener<RecipeWithIngredien
         val manager = GridLayoutManager(this, 2)
         recyclerView.layoutManager = manager
 
-        spCategory.setOnTouchListener(View.OnTouchListener { v, event ->
-            this.userTouch = true; false
-        })
+        spCategory.setOnTouchListener(View.OnTouchListener { v, event -> this.userTouch = true; false })
 
         spCategory.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
 
@@ -65,13 +62,7 @@ class MainActivity : AppCompatActivity(), IClickItemListener<RecipeWithIngredien
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         })
 
-        recipeRepository.getCategories().observe(this, Observer { categories ->
-            val categoryList = categories.toMutableList(); categoryList.add(0, Category(0, "All")); spCategory.adapter = ArrayAdapter(
-            this,
-            android.R.layout.simple_list_item_1,
-            categoryList
-        )
-        })
+        recipeRepository.getCategories().observe(this, Observer { categories -> val categoryList = categories.toMutableList(); categoryList.add(0, Category(0, "All")); spCategory.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, categoryList) })
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
