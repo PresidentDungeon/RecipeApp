@@ -98,7 +98,7 @@ class CrudActivity : AppCompatActivity(), IClickItemListener<IngredientEntry> {
         recyclerView.adapter = adapter
 
         val getDataJob = GlobalScope.async { recipeRepository.getCategories() }
-        getDataJob.invokeOnCompletion { _ -> val categoryList = getDataJob.getCompleted().toMutableList(); categoryList.add(0, Category(0, "All")); this.runOnUiThread { spCategories.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, categoryList)}}
+        getDataJob.invokeOnCompletion { _ -> val categoryList = getDataJob.getCompleted().toMutableList(); categoryList.add(0, Category(0, "Select category...")); this.runOnUiThread { spCategories.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, categoryList)}}
     }
 
 

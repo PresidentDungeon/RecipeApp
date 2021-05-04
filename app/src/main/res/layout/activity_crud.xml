@@ -111,8 +111,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
             android:hint="Enter directions..."
-            android:inputType="text"
-            android:textSize="15sp" />
+            android:inputType="textMultiLine"
+            android:textSize="15sp"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -124,6 +124,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true" />
+
+        <ProgressBar
+            android:id="@+id/loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="invisible"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -147,7 +154,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:enabled="false"
-                    android:text="Create" />
+                    android:text="Create"
+                    android:onClick="createRecipe"/>
 
                 <Button
                     android:id="@+id/btnUpdate"
