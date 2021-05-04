@@ -31,17 +31,31 @@ class RecipeRepository private constructor (context: Context){
     private val ingredientDAO = database.ingredientDAO()
 
     suspend fun addRecipe(recipe: Recipe, ingredients: List<IngredientEntry>){
-
         val recipeIngredient: MutableList<RecipeIngredientEntry> = mutableListOf()
+
         val recipeID = suspend {recipeDAO.addRecipe(recipe)}.invoke().toInt()
         ingredients.forEach { ingredientEntry -> ingredientEntry.recipeID = recipeID }
         val ingredientIDs = suspend {ingredientDAO.addIngredientEntries(ingredients)}.invoke().map {IDLong -> IDLong.toInt()}
         ingredientIDs.forEach { ingredientID -> recipeIngredient.add(RecipeIngredientEntry(recipeID, ingredientID))}
         suspend { recipeDAO.addRecipeIngredient(recipeIngredient) }.invoke()
-
     }
 
     suspend fun getRecipes(query: String, args: Array<Any>): List<RecipeWithIngredients> = recipeDAO.getRecipesFilter(SimpleSQLiteQuery(query, args))
+    suspend fun getRecipeByID(recipeID: Number): RecipeWithIngredients = recipeDAO.getRecipeByID(recipeID.toLong())
+
+    suspend fun updateRecipe(recipe: Recipe, ingredients: List<IngredientEntry>){
+        val recipeIngredient: MutableList<RecipeIngredientEntry> = mutableListOf()
+
+        recipeDAO.updateRecipe(recipe)
+        suspend { ingredientDAO.deleteIngredients(recipe.id.toLong()) }.invoke()
+        suspend { recipeDAO.deleteRecipeIngredients(recipe.id.toLong()) }.invoke()
+
+        ingredients.forEach { ingredientEntry -> ingredientEntry.recipeID = recipe.id }
+        val ingredientIDs = suspend {ingredientDAO.addIngredientEntries(ingredients)}.invoke().map {IDLong -> IDLong.toInt()}
+        ingredientIDs.forEach { ingredientID -> recipeIngredient.add(RecipeIngredientEntry(recipe.id, ingredientID))}
+        suspend { recipeDAO.addRecipeIngredient(recipeIngredient) }.invoke()
+    }
+
 
     fun addCategory(category: Category){categoryDAO.addCategory(category)}
     fun getCategories(): LiveData<List<Category>> = categoryDAO.getCategories()

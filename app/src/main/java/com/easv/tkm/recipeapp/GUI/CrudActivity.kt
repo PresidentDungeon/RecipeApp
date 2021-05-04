@@ -61,6 +61,7 @@ class CrudActivity : AppCompatActivity(), IClickItemListener<IngredientEntry> {
         btnAdd.setOnClickListener { view -> createIngredientEntry() }
         btnBack.setOnClickListener { view ->  setResult(Activity.RESULT_CANCELED, intent); finish()}
         btnCreate.setOnClickListener { view -> createRecipe() }
+        btnUpdate.setOnClickListener { view -> updateRecipe() }
 
         val ingredientListener = (object : TextWatcher {
             override fun afterTextChanged(s: Editable) {}
@@ -108,7 +109,9 @@ class CrudActivity : AppCompatActivity(), IClickItemListener<IngredientEntry> {
             spCategories.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, this.categories)
             if(intent.extras != null){
                 val categoryPosition = this.categories.indexOfFirst { category -> category.id == recipe.categoryID}
-                spCategories.setSelection(categoryPosition)} })
+                spCategories.setSelection(categoryPosition)
+                this.selectedCategory = this.categories[categoryPosition]}
+        })
 
         if(intent.extras != null){
             btnCreate.isVisible = false
@@ -117,7 +120,6 @@ class CrudActivity : AppCompatActivity(), IClickItemListener<IngredientEntry> {
 
             recipe = intent.extras?.getSerializable("RECIPE") as Recipe
             ingredients = (intent.extras?.getSerializable("INGREDIENTS") as Array<IngredientEntry>).toMutableList()
-
             initializeText()
         }
     }
@@ -132,7 +134,7 @@ class CrudActivity : AppCompatActivity(), IClickItemListener<IngredientEntry> {
             ivImage.setImageURI(Uri.fromFile(mFile))
         }
 
-        adapter.updateList(this.ingredients)
+        adapter.updateList(ingredients)
     }
 
 
@@ -146,7 +148,7 @@ class CrudActivity : AppCompatActivity(), IClickItemListener<IngredientEntry> {
         btnUpdate.isEnabled = isValid
     }
 
-    fun createRecipe() {
+    fun createRecipe(){
         val title = tvTitle.text.toString()
         val description = tvDescription.text.toString()
         val preparations = tvPreparations.text.toString()
@@ -155,6 +157,17 @@ class CrudActivity : AppCompatActivity(), IClickItemListener<IngredientEntry> {
 
         val getDataJob = GlobalScope.async { recipeRepository.addRecipe(recipe, ingredients) }
         getDataJob.invokeOnCompletion { setResult(IntentValues.RESPONSE_DETAIL_CREATE.code, intent); finish()}
+    }
+
+    fun updateRecipe(){
+        recipe.title = tvTitle.text.toString()
+        recipe.description = tvDescription.text.toString()
+        recipe.preparations = tvPreparations.text.toString()
+        recipe.categoryID = this.selectedCategory!!.id
+        recipe.imageURL = if (this.mFile != null && this.mFile!!.exists()) mFile!!.path else ""
+
+        val getDataJob = GlobalScope.async { recipeRepository.updateRecipe(recipe, ingredients) }
+        getDataJob.invokeOnCompletion { setResult(IntentValues.RESPONSE_DETAIL_UPDATE.code, intent); finish()}
     }
 
 
@@ -169,7 +182,7 @@ class CrudActivity : AppCompatActivity(), IClickItemListener<IngredientEntry> {
         }
     }
 
-    private fun checkCameraPermission() {
+    private fun checkCameraPermission(){
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return
         val permissions = mutableListOf<String>()
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)

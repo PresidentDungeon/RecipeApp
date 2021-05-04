@@ -11,7 +11,7 @@ import java.io.Serializable
 data class Recipe(
     @PrimaryKey(autoGenerate = true) var id: Int = 0,
     @ColumnInfo(name = "categoryID")
-    val categoryID: Int = 0,
+    var categoryID: Int = 0,
     var title: String,
     var description: String,
     var preparations: String,
