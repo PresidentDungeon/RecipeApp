@@ -9,6 +9,8 @@ import android.os.Debug
 import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
+import androidx.core.content.FileProvider
+import com.easv.tkm.recipeapp.BuildConfig
 import com.easv.tkm.recipeapp.DAL.RecipeRepository
 import com.easv.tkm.recipeapp.R
 import com.easv.tkm.recipeapp.data.Models.Category
@@ -56,20 +58,25 @@ class DetailsActivity : AppCompatActivity() {
     }
 
     fun share(view: View) {
-        val sendIntent = Intent(Intent.ACTION_VIEW,Uri.parse("sms:"))
-        //sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(File(recipe.imageURL)))
-        //sendIntent.type = "image/gif"
-        //sendIntent.data = Uri.parse("")
-        sendIntent.putExtra("sms_body", "Testing")
+        val path = FileProvider.getUriForFile(this, "${BuildConfig.APPLICATION_ID}.provider", File(recipe.imageURL))
+
+        val sendIntent = Intent(Intent.ACTION_SEND,Uri.parse("sms:"))
+        sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        sendIntent.putExtra(Intent.EXTRA_STREAM, path)
+        sendIntent.type = "image/png"
+        sendIntent.putExtra("sms_body", preparedSMS())
         startActivity(sendIntent)
     }
 
-    private fun preparedMMS(): String {
-        var MMS = ""
+    private fun preparedSMS(): String {
+        var SMS = ""
+        var ingredientString = ""
 
-        MMS += "${recipe.title} \n ${recipe.description} \n"
+        ingredients.forEach{ ingredient -> ingredientString += "${ingredient.name}: ${ingredient.amount} ${ingredient.measurementUnit} \n" }
 
-        return MMS
+        SMS += "${recipe.title} \n${recipe.description} \n\nIngredients:\n${ingredientString} \nDirections:\n${recipe.preparations}"
+
+        return SMS
     }
 
 }
