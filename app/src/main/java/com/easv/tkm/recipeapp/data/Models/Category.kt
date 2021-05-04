@@ -8,8 +8,5 @@ import java.io.Serializable
 data class Category(
     @PrimaryKey(autoGenerate = true) var id: Int = 0, var name: String) : Serializable {
 
-    override fun toString(): String {
-        return name
-    }
-
+    override fun toString(): String { return name }
     }

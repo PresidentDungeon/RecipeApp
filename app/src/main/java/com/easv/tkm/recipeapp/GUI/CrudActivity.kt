@@ -55,6 +55,7 @@ class CrudActivity : AppCompatActivity(), IClickItemListener<IngredientEntry> {
         ivImage.setOnClickListener { view -> checkCameraPermission()}
         btnAdd.setOnClickListener { view -> createIngredientEntry() }
         btnBack.setOnClickListener { view ->  setResult(Activity.RESULT_CANCELED, intent); finish()}
+        btnCreate.setOnClickListener { view -> createRecipe() }
 
         val ingredientListener = (object : TextWatcher {
             override fun afterTextChanged(s: Editable) {}
@@ -109,7 +110,7 @@ class CrudActivity : AppCompatActivity(), IClickItemListener<IngredientEntry> {
         this.btnCreate.isEnabled = tvTitle.text.isNotEmpty() && tvDescription.text.isNotEmpty() && tvPreparations.text.isNotEmpty() && this.ingredients.size > 0 && this.selectedCategory != null
     }
 
-    fun createRecipe(view: View) {
+    fun createRecipe() {
         val title = tvTitle.text.toString()
         val description = tvDescription.text.toString()
         val preparations = tvPreparations.text.toString()
@@ -118,11 +119,20 @@ class CrudActivity : AppCompatActivity(), IClickItemListener<IngredientEntry> {
 
         //Maybe save directly from here??
 
-        val intent = Intent()
-        intent.putExtra("RECIPE_CREATE", recipe)
-        intent.putExtra("INGREDIENTENTRIES", ingredients.toTypedArray())
-        setResult(IntentValues.RESPONSE_DETAIL_CREATE.code, intent)
-        finish()
+        val getDataJob = GlobalScope.async { recipeRepository.addRecipe(recipe, ingredients) }
+        getDataJob.invokeOnCompletion { setResult(IntentValues.RESPONSE_DETAIL_CREATE.code, intent); finish()}
+
+
+
+
+
+
+
+//        val intent = Intent()
+//        intent.putExtra("RECIPE_CREATE", recipe)
+//        intent.putExtra("INGREDIENTENTRIES", ingredients.toTypedArray())
+//        setResult(IntentValues.RESPONSE_DETAIL_CREATE.code, intent)
+//        finish()
     }
 
 
@@ -213,7 +223,7 @@ class CrudActivity : AppCompatActivity(), IClickItemListener<IngredientEntry> {
         tvAmount.setText("")
         tvUnit.setText("")
 
-        val ingredientEntry = IngredientEntry(0, title, amount, measureUnit)
+        val ingredientEntry = IngredientEntry(0, 0, title, amount, measureUnit)
         this.ingredients.add(ingredientEntry)
         this.adapter.updateList()
         this.validateRecipe()

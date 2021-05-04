@@ -11,6 +11,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.easv.tkm.recipeapp.DAL.RecipeRepository
 import com.easv.tkm.recipeapp.R
@@ -18,13 +19,14 @@ import com.easv.tkm.recipeapp.RecyclerAdapter.RecyclerAdapter
 import com.easv.tkm.recipeapp.data.IntentValues
 import com.easv.tkm.recipeapp.data.Models.Category
 import com.easv.tkm.recipeapp.data.Models.Recipe
+import com.easv.tkm.recipeapp.data.Models.RecipeWithIngredients
 import com.easv.tkm.recipeapp.data.interfaces.IClickItemListener
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 
-class MainActivity : AppCompatActivity(), IClickItemListener<Recipe> {
+class MainActivity : AppCompatActivity(), IClickItemListener<RecipeWithIngredients> {
 
     private var recipeRepository = RecipeRepository.get()
     private lateinit var adapter: RecyclerAdapter
@@ -39,6 +41,8 @@ class MainActivity : AppCompatActivity(), IClickItemListener<Recipe> {
         recyclerView.layoutManager = LinearLayoutManager(this)
         adapter = RecyclerAdapter(this, this)
         recyclerView.adapter = adapter
+        val manager = GridLayoutManager(this, 2)
+        recyclerView.layoutManager = manager
 
         spCategory.setOnTouchListener(View.OnTouchListener { v, event -> this.userTouch = true; false})
 
@@ -90,9 +94,10 @@ class MainActivity : AppCompatActivity(), IClickItemListener<Recipe> {
         adapter.filter(text, selectedCategory)
     }
 
-    override fun onItemClick(recipe: Recipe) {
+    override fun onItemClick(recipe: RecipeWithIngredients) {
         val intent = Intent(this, DetailsActivity::class.java)
-        intent.putExtra("RECIPE", recipe)
+        Log.d("XXXXX", "${recipe}")
+        intent.putExtra("RECIPE", recipe.recipe)
         startActivityForResult(intent, IntentValues.REQUEST_DETAIL.code)
     }
 
