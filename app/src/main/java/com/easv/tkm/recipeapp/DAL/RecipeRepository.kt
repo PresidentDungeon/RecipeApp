@@ -2,6 +2,7 @@ package com.easv.tkm.recipeapp.DAL
 
 import android.content.Context
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SimpleSQLiteQuery
@@ -43,7 +44,7 @@ class RecipeRepository private constructor (context: Context){
     suspend fun getRecipes(query: String, args: Array<Any>): List<RecipeWithIngredients> = recipeDAO.getRecipesFilter(SimpleSQLiteQuery(query, args))
 
     fun addCategory(category: Category){categoryDAO.addCategory(category)}
-    suspend fun getCategories(): List<Category> = categoryDAO.getCategories()
+    fun getCategories(): LiveData<List<Category>> = categoryDAO.getCategories()
     
     companion object{
         private var INSTANCE: RecipeRepository? = null

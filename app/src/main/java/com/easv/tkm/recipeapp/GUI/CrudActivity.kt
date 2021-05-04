@@ -20,6 +20,7 @@ import android.view.View
 import android.widget.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.easv.tkm.recipeapp.BuildConfig
 import com.easv.tkm.recipeapp.DAL.RecipeRepository
@@ -97,8 +98,7 @@ class CrudActivity : AppCompatActivity(), IClickItemListener<IngredientEntry> {
         adapter = RecyclerAdapterIngredient(this, this, this.ingredients)
         recyclerView.adapter = adapter
 
-        val getDataJob = GlobalScope.async { recipeRepository.getCategories() }
-        getDataJob.invokeOnCompletion { _ -> val categoryList = getDataJob.getCompleted().toMutableList(); categoryList.add(0, Category(0, "Select category...")); this.runOnUiThread { spCategories.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, categoryList)}}
+        recipeRepository.getCategories().observe(this, Observer{categories -> val categoryList = categories.toMutableList(); categoryList.add(0, Category(0, "Select Category...")); spCategories.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, categoryList)})
     }
 
 
@@ -117,22 +117,8 @@ class CrudActivity : AppCompatActivity(), IClickItemListener<IngredientEntry> {
 
         val recipe: Recipe = Recipe(0, this.selectedCategory!!.id, title, description, preparations, if(this.mFile != null && this.mFile!!.exists()) mFile!!.path else "")
 
-        //Maybe save directly from here??
-
         val getDataJob = GlobalScope.async { recipeRepository.addRecipe(recipe, ingredients) }
         getDataJob.invokeOnCompletion { setResult(IntentValues.RESPONSE_DETAIL_CREATE.code, intent); finish()}
-
-
-
-
-
-
-
-//        val intent = Intent()
-//        intent.putExtra("RECIPE_CREATE", recipe)
-//        intent.putExtra("INGREDIENTENTRIES", ingredients.toTypedArray())
-//        setResult(IntentValues.RESPONSE_DETAIL_CREATE.code, intent)
-//        finish()
     }
 
 
