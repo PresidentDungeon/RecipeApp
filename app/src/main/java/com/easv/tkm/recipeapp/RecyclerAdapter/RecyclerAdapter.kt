@@ -12,6 +12,7 @@ import com.easv.tkm.recipeapp.DAL.RecipeRepository
 import com.easv.tkm.recipeapp.R
 import com.easv.tkm.recipeapp.data.Models.Category
 import com.easv.tkm.recipeapp.data.Models.Recipe
+import com.easv.tkm.recipeapp.data.Models.RecipeWithIngredients
 import com.easv.tkm.recipeapp.data.Sorting
 import com.easv.tkm.recipeapp.data.interfaces.IClickItemListener
 import kotlinx.coroutines.GlobalScope
@@ -23,12 +24,12 @@ class RecyclerAdapter: RecyclerView.Adapter<RecyclerHolder>{
 
     private var mInflater: LayoutInflater
     private var recipeRepository: RecipeRepository = RecipeRepository.get()
-    private var itemListener: IClickItemListener<Recipe>
-    private var recipeList: List<Recipe> = emptyList()
+    private var itemListener: IClickItemListener<RecipeWithIngredients>
+    private var recipeList: List<RecipeWithIngredients> = emptyList()
     private var sortingType: Sorting = Sorting.SORTING_NAME
     private var context: Context
 
-    constructor(context: Context, itemClickListener: IClickItemListener<Recipe>) : super(){
+    constructor(context: Context, itemClickListener: IClickItemListener<RecipeWithIngredients>) : super(){
         this.mInflater = LayoutInflater.from(context)
         this.itemListener = itemClickListener
         this.context = context
@@ -45,7 +46,7 @@ class RecyclerAdapter: RecyclerView.Adapter<RecyclerHolder>{
     override fun onBindViewHolder(holder: RecyclerHolder, position: Int) {
         val recipe = recipeList[position]
         holder.view.setOnClickListener { view -> itemListener.onItemClick(recipe) }
-        holder.bind(recipe)
+        holder.bind(recipe.recipe)
     }
 
     override fun getItemCount(): Int {
@@ -105,6 +106,7 @@ class RecyclerHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         var file: File = File(this.recipe.imageURL)
         if (file!!.exists()){this.ivFood.setImageURI(Uri.fromFile(file))}
+        else{this.ivFood.setImageResource(R.drawable.placeholder)}
     }
 
     init { }
