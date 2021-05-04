@@ -1,5 +1,6 @@
 package com.easv.tkm.recipeapp.GUI
 
+import android.app.Activity
 import android.content.Intent
 import android.content.res.TypedArray
 import android.net.Uri
@@ -13,6 +14,7 @@ import androidx.core.content.FileProvider
 import com.easv.tkm.recipeapp.BuildConfig
 import com.easv.tkm.recipeapp.DAL.RecipeRepository
 import com.easv.tkm.recipeapp.R
+import com.easv.tkm.recipeapp.data.IntentValues
 import com.easv.tkm.recipeapp.data.Models.Category
 import com.easv.tkm.recipeapp.data.Models.IngredientEntry
 import com.easv.tkm.recipeapp.data.Models.Recipe
@@ -77,6 +79,18 @@ class DetailsActivity : AppCompatActivity() {
         SMS += "${recipe.title} \n${recipe.description} \n\nIngredients:\n${ingredientString} \nDirections:\n${recipe.preparations}"
 
         return SMS
+    }
+
+    fun openEdit(view: View){
+        val intent = Intent(this, CrudActivity::class.java)
+        intent.putExtra("RECIPE", recipe)
+        intent.putExtra("INGREDIENTS", ingredients)
+        startActivityForResult(intent, IntentValues.REQUESTCODE_UPDATE.code)
+    }
+
+    fun goBack(view: View){
+        setResult(Activity.RESULT_CANCELED, intent)
+        finish()
     }
 
 }

@@ -35,7 +35,6 @@ class RecyclerAdapterIngredient: RecyclerView.Adapter<RecyclerHolderIngredient>{
 
     override fun onBindViewHolder(holder: RecyclerHolderIngredient, position: Int) {
         val ingredient = ingredientList[position]
-        holder.view.setOnClickListener { view -> itemListener.onItemClick(ingredient) }
         holder.bind(ingredient, this.itemListener)
     }
 
@@ -44,6 +43,11 @@ class RecyclerAdapterIngredient: RecyclerView.Adapter<RecyclerHolderIngredient>{
     }
 
     fun updateList(){
+        notifyDataSetChanged()
+    }
+
+    fun updateList(ingredients: MutableList<IngredientEntry>){
+        this.ingredientList = ingredients
         notifyDataSetChanged()
     }
 
