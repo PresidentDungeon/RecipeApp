@@ -1,16 +1,16 @@
 package com.easv.tkm.recipeapp.GUI
 
 import android.content.Intent
-import android.location.Location
-import androidx.appcompat.app.AppCompatActivity
+import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.easv.tkm.recipeapp.DAL.RecipeRepository
@@ -18,7 +18,6 @@ import com.easv.tkm.recipeapp.R
 import com.easv.tkm.recipeapp.RecyclerAdapter.RecyclerAdapter
 import com.easv.tkm.recipeapp.data.IntentValues
 import com.easv.tkm.recipeapp.data.Models.Category
-import com.easv.tkm.recipeapp.data.Models.Recipe
 import com.easv.tkm.recipeapp.data.Models.RecipeWithIngredients
 import com.easv.tkm.recipeapp.data.interfaces.IClickItemListener
 import kotlinx.android.synthetic.main.activity_main.*
@@ -44,7 +43,9 @@ class MainActivity : AppCompatActivity(), IClickItemListener<RecipeWithIngredien
         val manager = GridLayoutManager(this, 2)
         recyclerView.layoutManager = manager
 
-        spCategory.setOnTouchListener(View.OnTouchListener { v, event -> this.userTouch = true; false})
+        spCategory.setOnTouchListener(View.OnTouchListener { v, event ->
+            this.userTouch = true; false
+        })
 
         spCategory.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
 
@@ -54,8 +55,7 @@ class MainActivity : AppCompatActivity(), IClickItemListener<RecipeWithIngredien
                     selectedCategory = spCategory.selectedItem as Category
                     userTouch = false
                     searchText()
-                }
-                else if(userTouch && position == 0){
+                } else if (userTouch && position == 0) {
                     selectedCategory = null
                     userTouch = false
                     searchText()
@@ -65,8 +65,13 @@ class MainActivity : AppCompatActivity(), IClickItemListener<RecipeWithIngredien
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         })
 
-        val getDataJob = GlobalScope.async { recipeRepository.getCategories() }
-        getDataJob.invokeOnCompletion { _ -> val categoryList = getDataJob.getCompleted().toMutableList(); categoryList.add(0, Category(0, "All")); this.runOnUiThread { spCategory.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, categoryList)}}
+        recipeRepository.getCategories().observe(this, Observer { categories ->
+            val categoryList = categories.toMutableList(); categoryList.add(0, Category(0, "All")); spCategory.adapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_list_item_1,
+            categoryList
+        )
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -79,7 +84,6 @@ class MainActivity : AppCompatActivity(), IClickItemListener<RecipeWithIngredien
 
         return when (item.itemId) {
             R.id.create_recipe -> { openCreateActivity(); true }
-
             else -> super.onOptionsItemSelected(item)
         }
     }
