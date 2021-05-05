@@ -17,12 +17,12 @@
         />
     <item
         android:id="@+id/sortName"
-        android:title="Name"
+        android:title="Name (desc)"
         android:checkable="false"
         />
     <item
         android:id="@+id/sortAge"
-        android:title="Age"
+        android:title="Age (asc)"
         android:checkable="false"
         />
 </group>

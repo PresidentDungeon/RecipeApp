@@ -20,17 +20,19 @@ import com.easv.tkm.recipeapp.data.Models.Category
 import com.easv.tkm.recipeapp.data.Models.RecipeWithIngredients
 import com.easv.tkm.recipeapp.data.Sorting
 import com.easv.tkm.recipeapp.data.interfaces.IClickItemListener
+import com.easv.tkm.recipeapp.data.interfaces.IMenuUpdate
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 
-class MainActivity : AppCompatActivity(), IClickItemListener<RecipeWithIngredients> {
+class MainActivity : AppCompatActivity(), IClickItemListener<RecipeWithIngredients>, IMenuUpdate {
 
     private var recipeRepository = RecipeRepository.get()
     private lateinit var adapter: RecyclerAdapter
     private var selectedCategory: Category? = null
     private var userTouch = false
+    private lateinit var menu: Menu
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +40,7 @@ class MainActivity : AppCompatActivity(), IClickItemListener<RecipeWithIngredien
         registerForContextMenu(recyclerView)
         btnSearch.setOnClickListener { view -> searchText() }
         recyclerView.layoutManager = LinearLayoutManager(this)
-        adapter = RecyclerAdapter(this, this)
+        adapter = RecyclerAdapter(this, this, this)
         recyclerView.adapter = adapter
         val manager = GridLayoutManager(this, 2)
         recyclerView.layoutManager = manager
@@ -69,6 +71,7 @@ class MainActivity : AppCompatActivity(), IClickItemListener<RecipeWithIngredien
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.main_menu, menu)
+        this.menu = menu
         return true
     }
 
@@ -79,6 +82,18 @@ class MainActivity : AppCompatActivity(), IClickItemListener<RecipeWithIngredien
             R.id.sortName -> {this.adapter.setSortingType(Sorting.SORTING_NAME); searchText(); true}
             R.id.sortAge -> {this.adapter.setSortingType(Sorting.SORTING_AGE); searchText(); true}
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun updateMenu(sortingType: Sorting) {
+        var nameMenuItem = menu.findItem(R.id.sortName)
+        var ageMenuItem = menu.findItem(R.id.sortAge)
+
+        when(sortingType){
+            Sorting.SORTING_NAME -> {nameMenuItem.title = "Name (desc)"; ageMenuItem.title = "Age (asc)"}
+            Sorting.SORTING_NAME_DESC -> {nameMenuItem.title = "Name (asc)"; ageMenuItem.title ="Age (asc)"}
+            Sorting.SORTING_AGE -> {nameMenuItem.title = "Name (asc)"; ageMenuItem.title = "Age (desc)"}
+            Sorting.SORTING_AGE_DESC -> {nameMenuItem.title = "Name (asc)"; ageMenuItem.title = "Age (asc)"}
         }
     }
 

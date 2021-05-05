@@ -16,6 +16,7 @@ import com.easv.tkm.recipeapp.data.Models.Recipe
 import com.easv.tkm.recipeapp.data.Models.RecipeWithIngredients
 import com.easv.tkm.recipeapp.data.Sorting
 import com.easv.tkm.recipeapp.data.interfaces.IClickItemListener
+import com.easv.tkm.recipeapp.data.interfaces.IMenuUpdate
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import java.io.File
@@ -26,13 +27,15 @@ class RecyclerAdapter: RecyclerView.Adapter<RecyclerHolder>{
     private var mInflater: LayoutInflater
     private var recipeRepository: RecipeRepository = RecipeRepository.get()
     private var itemListener: IClickItemListener<RecipeWithIngredients>
+    private var menuUpdate: IMenuUpdate
     private var recipeList: List<RecipeWithIngredients> = emptyList()
     private var sortingType: Sorting = Sorting.SORTING_NAME
     private var context: Context
 
-    constructor(context: Context, itemClickListener: IClickItemListener<RecipeWithIngredients>) : super(){
+    constructor(context: Context, itemClickListener: IClickItemListener<RecipeWithIngredients>, menuUpdate: IMenuUpdate) : super(){
         this.mInflater = LayoutInflater.from(context)
         this.itemListener = itemClickListener
+        this.menuUpdate = menuUpdate
         this.context = context
 
         val getDataJob = GlobalScope.async { recipeRepository.getRecipes("SELECT * FROM Recipe ORDER BY title COLLATE NOCASE ASC", emptyArray()) }
@@ -92,13 +95,13 @@ class RecyclerAdapter: RecyclerView.Adapter<RecyclerHolder>{
 
         if(this.sortingType == sortingType){
             when(sortingType){
-                Sorting.SORTING_NAME -> { this.sortingType = Sorting.SORTING_NAME_DESC }
-                Sorting.SORTING_NAME_DESC -> { this.sortingType = Sorting.SORTING_NAME }
-                Sorting.SORTING_AGE -> { this.sortingType = Sorting.SORTING_AGE_DESC }
-                Sorting.SORTING_AGE_DESC -> { this.sortingType = Sorting.SORTING_AGE }
+                Sorting.SORTING_NAME -> { this.sortingType = Sorting.SORTING_NAME_DESC;}
+                Sorting.SORTING_AGE -> { this.sortingType = Sorting.SORTING_AGE_DESC;}
             }
         }
+
         else this.sortingType = sortingType
+        menuUpdate.updateMenu(this.sortingType)
     }
 }
 
