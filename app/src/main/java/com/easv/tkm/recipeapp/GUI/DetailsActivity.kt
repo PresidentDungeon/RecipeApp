@@ -58,11 +58,16 @@ class DetailsActivity : AppCompatActivity() {
     }
 
     fun share(view: View) {
-        val path = FileProvider.getUriForFile(this, "${BuildConfig.APPLICATION_ID}.provider", File(recipe.imageURL))
 
         val sendIntent = Intent(Intent.ACTION_SEND,Uri.parse("sms:"))
+
+        if(File(recipe.imageURL).exists())
+        {
+            val path = FileProvider.getUriForFile(this, "${BuildConfig.APPLICATION_ID}.provider", File(recipe.imageURL))
+            sendIntent.putExtra(Intent.EXTRA_STREAM, path)
+        }
+
         sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        sendIntent.putExtra(Intent.EXTRA_STREAM, path)
         sendIntent.type = "image/png"
         sendIntent.putExtra("sms_body", preparedSMS())
         startActivity(sendIntent)
