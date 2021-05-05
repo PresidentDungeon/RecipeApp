@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".GUI.CrudActivity">
+    tools:context=".GUI.CrudActivity"
+    android:background="#F5F5DC">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -171,8 +172,9 @@
                     android:id="@+id/btnCreate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:enabled="false"
+                    android:enabled="true"
                     android:text="Create"
+                    android:backgroundTint="@color/button_create"
                     android:layout_margin="5dp"
                     />
 
@@ -182,7 +184,7 @@
                     android:layout_height="wrap_content"
                     android:text="Update"
                     android:visibility="gone"
-                    android:backgroundTint="#FF9900"
+                    android:backgroundTint="@color/button_update"
                     android:layout_margin="5dp"
                     />
 

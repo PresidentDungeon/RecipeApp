@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".GUI.DetailsActivity">
+    tools:context=".GUI.DetailsActivity"
+    android:background="#F5F5DC">
 
     <ImageView
         android:id="@+id/ivImage"
