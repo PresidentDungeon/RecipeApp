@@ -5,6 +5,7 @@ import android.net.Uri
 import android.util.Log
 import android.view.*
 import android.widget.ImageView
+import android.widget.Switch
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
@@ -34,7 +35,7 @@ class RecyclerAdapter: RecyclerView.Adapter<RecyclerHolder>{
         this.itemListener = itemClickListener
         this.context = context
 
-        val getDataJob = GlobalScope.async { recipeRepository.getRecipes("SELECT * FROM Recipe ORDER BY title ASC", emptyArray()) }
+        val getDataJob = GlobalScope.async { recipeRepository.getRecipes("SELECT * FROM Recipe ORDER BY title COLLATE NOCASE ASC", emptyArray()) }
         getDataJob.invokeOnCompletion { _ -> val myData = getDataJob.getCompleted(); this.recipeList = myData; (context as AppCompatActivity).runOnUiThread { notifyDataSetChanged()}}
     }
 
@@ -80,7 +81,7 @@ class RecyclerAdapter: RecyclerView.Adapter<RecyclerHolder>{
         }
 
         queryString += sortingType.query
-
+        Log.d("XXXX", queryString)
 
         val getDataJob = GlobalScope.async {recipeRepository.getRecipes(queryString, args.toTypedArray()) }
         getDataJob.invokeOnCompletion { _ -> val myData = getDataJob.getCompleted(); this.recipeList = myData
@@ -88,9 +89,17 @@ class RecyclerAdapter: RecyclerView.Adapter<RecyclerHolder>{
     }
 
     fun setSortingType(sortingType: Sorting){
-        this.sortingType = sortingType
-    }
 
+        if(this.sortingType == sortingType){
+            when(sortingType){
+                Sorting.SORTING_NAME -> { this.sortingType = Sorting.SORTING_NAME_DESC }
+                Sorting.SORTING_NAME_DESC -> { this.sortingType = Sorting.SORTING_NAME }
+                Sorting.SORTING_AGE -> { this.sortingType = Sorting.SORTING_AGE_DESC }
+                Sorting.SORTING_AGE_DESC -> { this.sortingType = Sorting.SORTING_AGE }
+            }
+        }
+        else this.sortingType = sortingType
+    }
 }
 
 

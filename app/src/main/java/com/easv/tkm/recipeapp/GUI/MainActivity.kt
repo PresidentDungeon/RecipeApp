@@ -18,6 +18,7 @@ import com.easv.tkm.recipeapp.RecyclerAdapter.RecyclerAdapter
 import com.easv.tkm.recipeapp.data.IntentValues
 import com.easv.tkm.recipeapp.data.Models.Category
 import com.easv.tkm.recipeapp.data.Models.RecipeWithIngredients
+import com.easv.tkm.recipeapp.data.Sorting
 import com.easv.tkm.recipeapp.data.interfaces.IClickItemListener
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Deferred
@@ -75,6 +76,8 @@ class MainActivity : AppCompatActivity(), IClickItemListener<RecipeWithIngredien
 
         return when (item.itemId) {
             R.id.create_recipe -> { openCreateActivity(); true }
+            R.id.sortName -> {this.adapter.setSortingType(Sorting.SORTING_NAME); searchText(); true}
+            R.id.sortAge -> {this.adapter.setSortingType(Sorting.SORTING_AGE); searchText(); true}
             else -> super.onOptionsItemSelected(item)
         }
     }
