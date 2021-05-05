@@ -1,4 +1,7 @@
 <paths>
+    <external-path
+        name="external"
+        path="." />
     <external-files-path
         name="images"
         path="Pictures/Camera"/>
