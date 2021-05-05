@@ -84,7 +84,6 @@ class RecyclerAdapter: RecyclerView.Adapter<RecyclerHolder>{
         }
 
         queryString += sortingType.query
-        Log.d("XXXX", queryString)
 
         val getDataJob = GlobalScope.async {recipeRepository.getRecipes(queryString, args.toTypedArray()) }
         getDataJob.invokeOnCompletion { _ -> val myData = getDataJob.getCompleted(); this.recipeList = myData
