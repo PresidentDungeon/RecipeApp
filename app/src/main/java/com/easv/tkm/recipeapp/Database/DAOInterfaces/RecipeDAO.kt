@@ -1,8 +1,6 @@
 package com.easv.tkm.recipeapp.Database.DAOInterfaces
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.RawQuery
+import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.easv.tkm.recipeapp.data.Models.Recipe
 import com.easv.tkm.recipeapp.data.Models.RecipeIngredientEntry
@@ -19,5 +17,14 @@ interface RecipeDAO {
 
     @RawQuery()
     suspend fun getRecipesFilter(query: SupportSQLiteQuery): List<RecipeWithIngredients>
+
+    @Query("SELECT * FROM Recipe WHERE id =:recipeID")
+    suspend fun getRecipeByID(recipeID: Long): RecipeWithIngredients
+
+    @Update
+    fun updateRecipe(recipe: Recipe)
+
+    @Query("DELETE FROM RecipeIngredientEntry WHERE recipeID = :recipeID")
+    suspend fun deleteRecipeIngredients(recipeID: Long)
 
 }

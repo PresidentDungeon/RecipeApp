@@ -1,5 +1,6 @@
 package com.easv.tkm.recipeapp.GUI
 
+import android.app.Activity
 import android.content.Intent
 import android.content.res.TypedArray
 import android.net.Uri
@@ -13,6 +14,7 @@ import androidx.core.content.FileProvider
 import com.easv.tkm.recipeapp.BuildConfig
 import com.easv.tkm.recipeapp.DAL.RecipeRepository
 import com.easv.tkm.recipeapp.R
+import com.easv.tkm.recipeapp.data.IntentValues
 import com.easv.tkm.recipeapp.data.Models.Category
 import com.easv.tkm.recipeapp.data.Models.IngredientEntry
 import com.easv.tkm.recipeapp.data.Models.Recipe
@@ -20,6 +22,7 @@ import kotlinx.android.synthetic.main.activity_details.*
 import kotlinx.android.synthetic.main.activity_details.tvDescription
 import kotlinx.android.synthetic.main.activity_details.tvPreparations
 import kotlinx.android.synthetic.main.activity_details.tvTitle
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import java.io.File
@@ -38,16 +41,18 @@ class DetailsActivity : AppCompatActivity() {
         this.ingredients = intent.extras?.getSerializable("INGREDIENTS") as Array<IngredientEntry>
 
         initializeText()
-        var file: File = File(this.recipe.imageURL)
-        if (file!!.exists()){ivImage.setImageURI(Uri.fromFile(file))}
-        else{ivImage.setImageResource(R.drawable.placeholder)}
-        updateIngredients()
+
     }
 
     fun initializeText() {
         tvTitle.setText(recipe.title)
         tvDescription.setText(recipe.description)
         tvPreparations.setText(recipe.preparations)
+
+        var file: File = File(this.recipe.imageURL)
+        if (file!!.exists()){ivImage.setImageURI(Uri.fromFile(file))}
+        else{ivImage.setImageResource(R.drawable.placeholder)}
+        updateIngredients()
     }
 
     private fun updateIngredients() {
@@ -82,6 +87,27 @@ class DetailsActivity : AppCompatActivity() {
         SMS += "${recipe.title} \n${recipe.description} \n\nIngredients:\n${ingredientString} \nDirections:\n${recipe.preparations}"
 
         return SMS
+    }
+
+    fun openEdit(view: View){
+        val intent = Intent(this, CrudActivity::class.java)
+        intent.putExtra("RECIPE", recipe)
+        intent.putExtra("INGREDIENTS", ingredients)
+        startActivityForResult(intent, IntentValues.REQUESTCODE_CRUD.code)
+    }
+
+    fun goBack(view: View){
+        finish()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if(requestCode == IntentValues.REQUESTCODE_CRUD.code && resultCode == IntentValues.RESPONSE_DETAIL_UPDATE.code) {
+            val getDataJob = GlobalScope.async { recipeRepository.getRecipeByID(recipe.id) }
+            getDataJob.invokeOnCompletion { _ -> val recipeWithIngredients = getDataJob.getCompleted(); Log.d("XXXXX", "${recipeWithIngredients.toString()}"); this.recipe = recipeWithIngredients.recipe; this.ingredients = recipeWithIngredients.ingredientEntries.toTypedArray(); runOnUiThread { initializeText()}}
+            setResult(IntentValues.RESPONSE_DETAIL_UPDATE.code, intent)
+        }
     }
 
 }

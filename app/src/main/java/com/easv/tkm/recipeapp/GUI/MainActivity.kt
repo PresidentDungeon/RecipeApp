@@ -81,7 +81,7 @@ class MainActivity : AppCompatActivity(), IClickItemListener<RecipeWithIngredien
 
     fun openCreateActivity(){
         val intent = Intent(this, CrudActivity::class.java)
-        startActivityForResult(intent, IntentValues.REQUEST_DETAIL.code)
+        startActivityForResult(intent, IntentValues.REQUESTCODE_CRUD.code)
     }
 
     fun searchText(){
@@ -101,7 +101,7 @@ class MainActivity : AppCompatActivity(), IClickItemListener<RecipeWithIngredien
 
         var job: Deferred<Unit>? = null
 
-        if(requestCode == IntentValues.REQUEST_DETAIL.code && resultCode == IntentValues.RESPONSE_DETAIL_CREATE.code) {
+        if(requestCode == IntentValues.REQUESTCODE_CRUD.code && resultCode == IntentValues.RESPONSE_DETAIL_CREATE.code) {
             job = GlobalScope.async {}
         }
 
