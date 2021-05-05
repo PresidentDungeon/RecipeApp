@@ -4,15 +4,20 @@ import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.ActivityNotFoundException
+import android.content.ContentUris
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.database.Cursor
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -36,7 +41,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import java.io.File
-import java.io.InputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -265,10 +269,11 @@ class CrudActivity : AppCompatActivity(), IClickItemListener<IngredientEntry> {
 
 
     fun pickImage(){
-        val intent = Intent()
+        val intent = Intent(
+            Intent.ACTION_PICK,
+            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+        )
         intent.type = "image/*"
-        intent.action = Intent.ACTION_GET_CONTENT
-        intent.addCategory(Intent.CATEGORY_OPENABLE)
         startActivityForResult(intent, IntentValues.REQUESTCODE_IMAGE_PICK.code)
     }
 
@@ -346,12 +351,25 @@ class CrudActivity : AppCompatActivity(), IClickItemListener<IngredientEntry> {
                 )
             }
             IntentValues.REQUESTCODE_IMAGE_PICK.code -> if (resultCode == RESULT_OK) {
-                var stream: InputStream? = contentResolver.openInputStream(data!!.data!!)
-                
+                val selectedImage: Uri = data!!.data!!
+                ivImage.setImageURI(selectedImage)
+                mFile = File(getPathFromUri(selectedImage))
             }
             else -> false
         }
     }
 
-
+    fun getPathFromUri(uri: Uri): String? {
+        var cursor: Cursor? = null
+        val column = "_data"
+        val projection = arrayOf(column)
+        try {
+            cursor = contentResolver.query(uri, projection, null, null, null)
+            if (cursor != null && cursor.moveToFirst()) {
+                val index: Int = cursor.getColumnIndexOrThrow(column)
+                return cursor.getString(index)
+            }
+        } finally { cursor?.close() }
+        return null
+    }
 }
