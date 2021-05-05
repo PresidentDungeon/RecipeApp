@@ -12,7 +12,7 @@
         <ImageView
             android:id="@+id/ivImage"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:src="@drawable/placeholder" />
 
         <TextView
@@ -98,7 +98,7 @@
         <androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="wrap_content"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -147,7 +147,8 @@
                     android:id="@+id/btnBack"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Back" />
+                    android:text="Back"
+                    android:backgroundTint="#000099"/>
 
                 <Button
                     android:id="@+id/btnCreate"
@@ -162,14 +163,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Update"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    android:backgroundTint="#FF9900"/>
 
                 <Button
                     android:id="@+id/btnDelete"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Delete"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    android:backgroundTint="@color/red"/>
             </LinearLayout>
         </RelativeLayout>
     </LinearLayout>
