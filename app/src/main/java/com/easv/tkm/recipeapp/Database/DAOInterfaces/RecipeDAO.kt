@@ -15,7 +15,7 @@ interface RecipeDAO {
     @Insert
     suspend fun addRecipeIngredient(recipeIngredientEntry: List<RecipeIngredientEntry>)
 
-    @RawQuery()
+    @RawQuery
     suspend fun getRecipesFilter(query: SupportSQLiteQuery): List<RecipeWithIngredients>
 
     @Query("SELECT * FROM Recipe WHERE id =:recipeID")
@@ -26,5 +26,8 @@ interface RecipeDAO {
 
     @Query("DELETE FROM RecipeIngredientEntry WHERE recipeID = :recipeID")
     suspend fun deleteRecipeIngredients(recipeID: Long)
+
+    @Delete
+    fun deleteRecipe(recipe: Recipe)
 
 }

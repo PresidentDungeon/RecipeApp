@@ -7,17 +7,15 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.opengl.Visibility
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import androidx.core.view.isVisible
@@ -26,7 +24,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.easv.tkm.recipeapp.BuildConfig
 import com.easv.tkm.recipeapp.DAL.RecipeRepository
 import com.easv.tkm.recipeapp.R
-import com.easv.tkm.recipeapp.RecyclerAdapter.RecyclerAdapter
 import com.easv.tkm.recipeapp.RecyclerAdapter.RecyclerAdapterIngredient
 import com.easv.tkm.recipeapp.data.IntentValues
 import com.easv.tkm.recipeapp.data.Models.Category
@@ -39,8 +36,11 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import java.io.File
+import java.io.InputStream
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.imageio.ImageIO
+
 
 class CrudActivity : AppCompatActivity(), IClickItemListener<IngredientEntry> {
 
@@ -62,6 +62,7 @@ class CrudActivity : AppCompatActivity(), IClickItemListener<IngredientEntry> {
         btnBack.setOnClickListener { view ->  setResult(Activity.RESULT_CANCELED, intent); finish()}
         btnCreate.setOnClickListener { view -> createRecipe() }
         btnUpdate.setOnClickListener { view -> updateRecipe() }
+        btnDelete.setOnClickListener { view -> showDeleteDialog() }
 
         val ingredientListener = (object : TextWatcher {
             override fun afterTextChanged(s: Editable) {}
@@ -85,17 +86,22 @@ class CrudActivity : AppCompatActivity(), IClickItemListener<IngredientEntry> {
 
         spCategories.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
 
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
 
                 if (position != 0) {
                     selectedCategory = spCategories.selectedItem as Category
                     validateRecipe()
-                }
-                else if(position == 0){
+                } else if (position == 0) {
                     selectedCategory = null
                     validateRecipe()
                 }
             }
+
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         })
 
@@ -103,14 +109,20 @@ class CrudActivity : AppCompatActivity(), IClickItemListener<IngredientEntry> {
         adapter = RecyclerAdapterIngredient(this, this, this.ingredients)
         recyclerView.adapter = adapter
 
-        recipeRepository.getCategories().observe(this, Observer{categories ->
+        recipeRepository.getCategories().observe(this, Observer { categories ->
             this.categories = categories.toMutableList()
             this.categories.add(0, Category(0, "Select Category..."))
-            spCategories.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, this.categories)
-            if(intent.extras != null){
-                val categoryPosition = this.categories.indexOfFirst { category -> category.id == recipe.categoryID}
+            spCategories.adapter = ArrayAdapter(
+                this,
+                android.R.layout.simple_list_item_1,
+                this.categories
+            )
+            if (intent.extras != null) {
+                val categoryPosition =
+                    this.categories.indexOfFirst { category -> category.id == recipe.categoryID }
                 spCategories.setSelection(categoryPosition)
-                this.selectedCategory = this.categories[categoryPosition]}
+                this.selectedCategory = this.categories[categoryPosition]
+            }
         })
 
         if(intent.extras != null){
@@ -153,7 +165,14 @@ class CrudActivity : AppCompatActivity(), IClickItemListener<IngredientEntry> {
         val description = tvDescription.text.toString()
         val preparations = tvPreparations.text.toString()
 
-        val recipe: Recipe = Recipe(0, this.selectedCategory!!.id, title, description, preparations, if(this.mFile != null && this.mFile!!.exists()) mFile!!.path else "")
+        val recipe: Recipe = Recipe(
+            0,
+            this.selectedCategory!!.id,
+            title,
+            description,
+            preparations,
+            if (this.mFile != null && this.mFile!!.exists()) mFile!!.path else ""
+        )
 
         val getDataJob = GlobalScope.async { recipeRepository.addRecipe(recipe, ingredients) }
         getDataJob.invokeOnCompletion { setResult(IntentValues.RESPONSE_DETAIL_CREATE.code, intent); finish()}
@@ -170,9 +189,28 @@ class CrudActivity : AppCompatActivity(), IClickItemListener<IngredientEntry> {
         getDataJob.invokeOnCompletion { setResult(IntentValues.RESPONSE_DETAIL_UPDATE.code, intent); finish()}
     }
 
+    fun showDeleteDialog(){
+        val alertDialogBuilder = AlertDialog.Builder(this)
+        alertDialogBuilder.setTitle("Delete entry")
+        alertDialogBuilder
+            .setMessage("Delete recipe ${recipe.title}?")
+            .setCancelable(true)
+            .setPositiveButton("Delete") { dialog, id -> deleteRecipe() }
+            .setNegativeButton("Cancel", { dialog, id -> })
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.show()
+    }
 
+    fun deleteRecipe(){
+        val getDataJob = GlobalScope.async { recipeRepository.deleteRecipe(recipe) }
+        getDataJob.invokeOnCompletion { setResult(IntentValues.RESPONSE_DETAIL_DELETE.code, intent); finish()}
+    }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         if (requestCode === PERMISSION_REQUEST_CODE_CAMERA) {
@@ -190,7 +228,11 @@ class CrudActivity : AppCompatActivity(), IClickItemListener<IngredientEntry> {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
             permissions.add(Manifest.permission.CAMERA)
         if (permissions.size > 0)
-            ActivityCompat.requestPermissions(this, permissions.toTypedArray(), PERMISSION_REQUEST_CODE_CAMERA)
+            ActivityCompat.requestPermissions(
+                this,
+                permissions.toTypedArray(),
+                PERMISSION_REQUEST_CODE_CAMERA
+            )
         else
             showCameraDialog()
     }
@@ -217,8 +259,18 @@ class CrudActivity : AppCompatActivity(), IClickItemListener<IngredientEntry> {
             .setCancelable(true)
             .setPositiveButton("Standard App") { dialog, id -> startCameraActivity() }
             .setNegativeButton("Directly", { dialog, id -> startInCameraActivity() })
+            .setNeutralButton("File", { dialog, id -> pickImage() })
         val alertDialog = alertDialogBuilder.create()
         alertDialog.show()
+    }
+
+
+    fun pickImage(){
+        val intent = Intent()
+        intent.type = "image/*"
+        intent.action = Intent.ACTION_GET_CONTENT
+        intent.addCategory(Intent.CATEGORY_OPENABLE)
+        startActivityForResult(intent, IntentValues.REQUESTCODE_IMAGE_PICK.code)
     }
 
     private fun startCameraActivity() {
@@ -228,7 +280,13 @@ class CrudActivity : AppCompatActivity(), IClickItemListener<IngredientEntry> {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
 
         val applicationId = BuildConfig.APPLICATION_ID
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(this, "${applicationId}.provider", mFile!!))
+        intent.putExtra(
+            MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(
+                this,
+                "${applicationId}.provider",
+                mFile!!
+            )
+        )
 
         try{
             startActivityForResult(intent, IntentValues.REQUESTCODE_IMAGE_APP.code)
@@ -274,8 +332,24 @@ class CrudActivity : AppCompatActivity(), IClickItemListener<IngredientEntry> {
         super.onActivityResult(requestCode, resultCode, data)
 
         when (requestCode) {
-            IntentValues.REQUESTCODE_IMAGE_APP.code -> if (resultCode == RESULT_OK) { ivImage.setImageURI(Uri.fromFile(mFile))}
-            IntentValues.REQUESTCODE_IMAGE_DIRECT.code -> if (resultCode == RESULT_OK) { ivImage.setImageURI(Uri.fromFile(mFile))}
+            IntentValues.REQUESTCODE_IMAGE_APP.code -> if (resultCode == RESULT_OK) {
+                ivImage.setImageURI(
+                    Uri.fromFile(
+                        mFile
+                    )
+                )
+            }
+            IntentValues.REQUESTCODE_IMAGE_DIRECT.code -> if (resultCode == RESULT_OK) {
+                ivImage.setImageURI(
+                    Uri.fromFile(
+                        mFile
+                    )
+                )
+            }
+            IntentValues.REQUESTCODE_IMAGE_PICK.code -> if (resultCode == RESULT_OK) {
+                var stream: InputStream? = contentResolver.openInputStream(data!!.data!!)
+                
+            }
             else -> false
         }
     }
