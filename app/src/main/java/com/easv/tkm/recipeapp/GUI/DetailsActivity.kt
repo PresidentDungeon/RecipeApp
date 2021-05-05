@@ -100,8 +100,12 @@ class DetailsActivity : AppCompatActivity() {
 
         if(requestCode == IntentValues.REQUESTCODE_CRUD.code && resultCode == IntentValues.RESPONSE_DETAIL_UPDATE.code) {
             val getDataJob = GlobalScope.async { recipeRepository.getRecipeByID(recipe.id) }
-            getDataJob.invokeOnCompletion { _ -> val recipeWithIngredients = getDataJob.getCompleted(); Log.d("XXXXX", "${recipeWithIngredients.toString()}"); this.recipe = recipeWithIngredients.recipe; this.ingredients = recipeWithIngredients.ingredientEntries.toTypedArray(); runOnUiThread { initializeText()}}
+            getDataJob.invokeOnCompletion { _ -> val recipeWithIngredients = getDataJob.getCompleted(); this.recipe = recipeWithIngredients.recipe; this.ingredients = recipeWithIngredients.ingredientEntries.toTypedArray(); runOnUiThread { initializeText()}}
             setResult(IntentValues.RESPONSE_DETAIL_UPDATE.code, intent)
+        }
+        else if(requestCode == IntentValues.REQUESTCODE_CRUD.code && resultCode == IntentValues.RESPONSE_DETAIL_DELETE.code){
+            setResult(IntentValues.RESPONSE_DETAIL_DELETE.code, intent)
+            finish()
         }
     }
 

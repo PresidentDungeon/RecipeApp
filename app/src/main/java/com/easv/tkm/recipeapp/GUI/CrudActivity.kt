@@ -62,6 +62,7 @@ class CrudActivity : AppCompatActivity(), IClickItemListener<IngredientEntry> {
         btnBack.setOnClickListener { view ->  setResult(Activity.RESULT_CANCELED, intent); finish()}
         btnCreate.setOnClickListener { view -> createRecipe() }
         btnUpdate.setOnClickListener { view -> updateRecipe() }
+        btnDelete.setOnClickListener { view -> showDeleteDialog() }
 
         val ingredientListener = (object : TextWatcher {
             override fun afterTextChanged(s: Editable) {}
@@ -170,7 +171,22 @@ class CrudActivity : AppCompatActivity(), IClickItemListener<IngredientEntry> {
         getDataJob.invokeOnCompletion { setResult(IntentValues.RESPONSE_DETAIL_UPDATE.code, intent); finish()}
     }
 
+    fun showDeleteDialog(){
+        val alertDialogBuilder = AlertDialog.Builder(this)
+        alertDialogBuilder.setTitle("Delete entry")
+        alertDialogBuilder
+            .setMessage("Delete recipe ${recipe.title}?")
+            .setCancelable(true)
+            .setPositiveButton("Delete") { dialog, id -> deleteRecipe() }
+            .setNegativeButton("Cancel", { dialog, id ->})
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.show()
+    }
 
+    fun deleteRecipe(){
+        val getDataJob = GlobalScope.async { recipeRepository.deleteRecipe(recipe) }
+        getDataJob.invokeOnCompletion { setResult(IntentValues.RESPONSE_DETAIL_DELETE.code, intent); finish()}
+    }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)

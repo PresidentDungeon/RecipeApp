@@ -56,6 +56,7 @@ class RecipeRepository private constructor (context: Context){
         suspend { recipeDAO.addRecipeIngredient(recipeIngredient) }.invoke()
     }
 
+    suspend fun deleteRecipe(recipe: Recipe) = recipeDAO.deleteRecipe(recipe)
 
     fun addCategory(category: Category){categoryDAO.addCategory(category)}
     fun getCategories(): LiveData<List<Category>> = categoryDAO.getCategories()
