@@ -15,7 +15,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/btnSearch"
-            android:hint="Search for recipe" />
+            android:hint="Search for recipe"
+            />
 
         <ImageButton
             android:id="@+id/btnSearch"
@@ -24,14 +25,14 @@
             android:layout_toLeftOf="@+id/spCategory"
             android:scaleType="fitCenter"
             android:src="@drawable/icon_search"
-
             />
 
         <Spinner
             android:id="@+id/spCategory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true" />
+            android:layout_alignParentRight="true"
+            />
     </RelativeLayout>
 
     <ScrollView
@@ -44,9 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:spanCount="2" />
-
+            app:spanCount="2"
+            />
     </ScrollView>
-
-
 </RelativeLayout>

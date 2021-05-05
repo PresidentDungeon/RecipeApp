@@ -8,7 +8,8 @@
     <ImageView
         android:id="@+id/ivImage"
         android:layout_width="match_parent"
-        android:layout_height="270dp" />
+        android:layout_height="270dp"
+        />
 
     <TextView
         android:id="@+id/tvTitle"
@@ -16,14 +17,16 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/ivImage"
         android:text="{{Title}}"
-        android:textSize="25dp" />
+        android:textSize="25dp"
+        />
 
     <TextView
         android:id="@+id/tvDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/tvTitle"
-        android:text="{{Description}}" />
+        android:text="{{Description}}"
+        />
 
     <LinearLayout
         android:id="@+id/llIngredients"
@@ -34,13 +37,15 @@
         <TextView
             android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:text="Ingredients:" />
+            android:text="Ingredients:"
+            />
 
         <TextView
             android:id="@+id/tvIngredients"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Yoooo" />
+            android:hint="Yoooo"
+            />
     </LinearLayout>
 
     <LinearLayout
@@ -51,13 +56,15 @@
         <TextView
             android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:text="Directions:" />
+            android:text="Directions:"
+            />
 
         <TextView
             android:id="@+id/tvPreparations"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Heeey" />
+            android:hint="Heeey"
+            />
     </LinearLayout>
 
     <LinearLayout
@@ -73,6 +80,7 @@
             android:text="Back"
             android:backgroundTint="#000099"
             android:onClick="goBack"
+            android:layout_margin="5dp"
             />
 
         <Button
@@ -80,7 +88,9 @@
             android:layout_height="wrap_content"
             android:text="Share"
             android:backgroundTint="#009900"
-            android:onClick="share"/>
+            android:onClick="share"
+            android:layout_margin="5dp"
+            />
 
         <Button
             android:layout_width="wrap_content"
@@ -88,7 +98,7 @@
             android:text="Edit"
             android:backgroundTint="#FF9900"
             android:onClick="openEdit"
+            android:layout_margin="5dp"
             />
     </LinearLayout>
-
 </RelativeLayout>

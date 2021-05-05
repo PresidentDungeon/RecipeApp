@@ -39,7 +39,6 @@ import java.io.File
 import java.io.InputStream
 import java.text.SimpleDateFormat
 import java.util.*
-import javax.imageio.ImageIO
 
 
 class CrudActivity : AppCompatActivity(), IClickItemListener<IngredientEntry> {
