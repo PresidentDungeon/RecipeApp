@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.easv.tkm.recipeapp.R
@@ -66,7 +67,7 @@ class RecyclerHolderIngredient(view: View) : RecyclerView.ViewHolder(view) {
     val tvName: TextView = view.findViewById(R.id.tvName)
     val tvAmount: TextView = view.findViewById(R.id.tvAmount)
     val tvMeasure: TextView = view.findViewById(R.id.tvMeasure)
-    val btnRemove: Button = view.findViewById(R.id.btnRemove)
+    val btnRemove: ImageButton = view.findViewById(R.id.btnRemove)
 
     fun bind(ingredient: IngredientEntry, IClickItemListener: IClickItemListener<IngredientEntry>){
         this.ingredient = ingredient

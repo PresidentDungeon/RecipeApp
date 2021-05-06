@@ -37,13 +37,13 @@
         android:layout_marginRight="20dp"
         />
 
-    <Button
+    <ImageButton
         android:id="@+id/btnRemove"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="remove"
+        android:src="@drawable/close"
         android:layout_alignParentRight="true"
-        android:backgroundTint="@color/red"
+        android:backgroundTint="#00000000"
         />
 
 </LinearLayout>
