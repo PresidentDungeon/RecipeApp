@@ -179,6 +179,7 @@ class CrudActivity : AppCompatActivity(), IClickItemListener<IngredientEntry> {
 
         val getDataJob = GlobalScope.async { recipeRepository.addRecipe(recipe, ingredients) }
         getDataJob.invokeOnCompletion { setResult(IntentValues.RESPONSE_DETAIL_CREATE.code, intent); finish()}
+        Toast.makeText(this, "Recipe created", Toast.LENGTH_SHORT).show()
     }
 
     fun updateRecipe(){
@@ -190,6 +191,7 @@ class CrudActivity : AppCompatActivity(), IClickItemListener<IngredientEntry> {
 
         val getDataJob = GlobalScope.async { recipeRepository.updateRecipe(recipe, ingredients) }
         getDataJob.invokeOnCompletion { setResult(IntentValues.RESPONSE_DETAIL_UPDATE.code, intent); finish()}
+        Toast.makeText(this, "Recipe updated", Toast.LENGTH_SHORT).show()
     }
 
     fun showDeleteDialog(){
@@ -207,6 +209,7 @@ class CrudActivity : AppCompatActivity(), IClickItemListener<IngredientEntry> {
     fun deleteRecipe(){
         val getDataJob = GlobalScope.async { recipeRepository.deleteRecipe(recipe) }
         getDataJob.invokeOnCompletion { setResult(IntentValues.RESPONSE_DETAIL_DELETE.code, intent); finish()}
+        Toast.makeText(this, "Recipe deleted", Toast.LENGTH_SHORT).show()
     }
 
     override fun onRequestPermissionsResult(
