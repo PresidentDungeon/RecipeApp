@@ -22,7 +22,7 @@
         />
     <item
         android:id="@+id/sortAge"
-        android:title="Age (asc)"
+        android:title="Newest (asc)"
         android:checkable="false"
         />
 </group>

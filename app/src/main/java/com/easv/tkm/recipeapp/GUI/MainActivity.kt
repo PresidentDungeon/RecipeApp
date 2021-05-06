@@ -90,10 +90,10 @@ class MainActivity : AppCompatActivity(), IClickItemListener<RecipeWithIngredien
         var ageMenuItem = menu.findItem(R.id.sortAge)
 
         when(sortingType){
-            Sorting.SORTING_NAME -> {nameMenuItem.title = "Name (desc)"; ageMenuItem.title = "Age (asc)"}
-            Sorting.SORTING_NAME_DESC -> {nameMenuItem.title = "Name (asc)"; ageMenuItem.title ="Age (asc)"}
-            Sorting.SORTING_AGE -> {nameMenuItem.title = "Name (asc)"; ageMenuItem.title = "Age (desc)"}
-            Sorting.SORTING_AGE_DESC -> {nameMenuItem.title = "Name (asc)"; ageMenuItem.title = "Age (asc)"}
+            Sorting.SORTING_NAME -> {nameMenuItem.title = "Name (desc)"; ageMenuItem.title = "Newest (asc)"}
+            Sorting.SORTING_NAME_DESC -> {nameMenuItem.title = "Name (asc)"; ageMenuItem.title ="Newest (asc)"}
+            Sorting.SORTING_AGE -> {nameMenuItem.title = "Name (asc)"; ageMenuItem.title = "Newest (desc)"}
+            Sorting.SORTING_AGE_DESC -> {nameMenuItem.title = "Name (asc)"; ageMenuItem.title = "Newest (asc)"}
         }
     }
 
