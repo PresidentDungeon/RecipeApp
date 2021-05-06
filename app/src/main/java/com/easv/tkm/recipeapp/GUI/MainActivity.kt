@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
@@ -90,10 +91,10 @@ class MainActivity : AppCompatActivity(), IClickItemListener<RecipeWithIngredien
         var ageMenuItem = menu.findItem(R.id.sortAge)
 
         when(sortingType){
-            Sorting.SORTING_NAME -> {nameMenuItem.title = "Name (desc)"; ageMenuItem.title = "Newest (asc)"}
-            Sorting.SORTING_NAME_DESC -> {nameMenuItem.title = "Name (asc)"; ageMenuItem.title ="Newest (asc)"}
-            Sorting.SORTING_AGE -> {nameMenuItem.title = "Name (asc)"; ageMenuItem.title = "Newest (desc)"}
-            Sorting.SORTING_AGE_DESC -> {nameMenuItem.title = "Name (asc)"; ageMenuItem.title = "Newest (asc)"}
+            Sorting.SORTING_NAME -> {nameMenuItem.title = "Name (desc)"; ageMenuItem.title = "Newest (asc)"; Toast.makeText(this, "Sorted by name ascending", Toast.LENGTH_SHORT).show()}
+            Sorting.SORTING_NAME_DESC -> {nameMenuItem.title = "Name (asc)"; ageMenuItem.title ="Newest (asc)"; Toast.makeText(this, "Sorted by name descending", Toast.LENGTH_SHORT).show()}
+            Sorting.SORTING_AGE -> {nameMenuItem.title = "Name (asc)"; ageMenuItem.title = "Newest (desc)"; Toast.makeText(this, "Sorted by newest ascending", Toast.LENGTH_SHORT).show()}
+            Sorting.SORTING_AGE_DESC -> {nameMenuItem.title = "Name (asc)"; ageMenuItem.title = "Newest (asc)"; Toast.makeText(this, "Sorted by newest descending", Toast.LENGTH_SHORT).show()}
         }
     }
 
