@@ -1,105 +1,120 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".GUI.DetailsActivity"
-    android:background="#F5F5DC">
-
-    <ImageView
-        android:id="@+id/ivImage"
-        android:layout_width="match_parent"
-        android:layout_height="270dp"
-        />
-
-    <TextView
-        android:id="@+id/tvTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/ivImage"
-        android:text="{{Title}}"
-        android:textSize="25dp"
-        />
-
-    <TextView
-        android:id="@+id/tvDescription"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tvTitle"
-        android:text="{{Description}}"
-        />
+    android:background="#F5F5DC"
+    tools:context=".GUI.DetailsActivity">
 
     <LinearLayout
-        android:id="@+id/llIngredients"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvDescription">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/ivImage"
+            android:layout_width="match_parent"
+            android:layout_height="270dp"
+            android:scaleType="centerCrop"/>
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ivImage"
+            android:text="{{Title}}"
+            android:textSize="25dp"
+            android:textStyle="bold"
+            android:layout_marginLeft="5dp"/>
+
+        <TextView
+            android:id="@+id/tvDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvTitle"
+            android:text="{{Description}}"
+            android:layout_marginLeft="10dp"/>
+
 
         <TextView
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:text="Ingredients:"
-            />
+            android:textStyle="bold"
+            android:layout_marginLeft="5dp"/>
 
-        <TextView
-            android:id="@+id/tvIngredients"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Yoooo"
-            />
-    </LinearLayout>
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/llIngredients">
+            <TextView
+                android:id="@+id/inName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/inAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/inUnit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
 
         <TextView
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:text="Directions:"
-            />
+            android:textStyle="bold"
+            android:layout_marginLeft="5dp"/>
 
         <TextView
             android:id="@+id/tvPreparations"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Heeey"
-            />
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/buttonLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:backgroundTint="#000099"
+                    android:onClick="goBack"
+                    android:text="Back" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:backgroundTint="#009900"
+                    android:onClick="share"
+                    android:text="Share" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:backgroundTint="#FF9900"
+                    android:onClick="openEdit"
+                    android:text="Edit" />
+            </LinearLayout>
+        </RelativeLayout>
     </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/buttonLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true">
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Back"
-            android:backgroundTint="#000099"
-            android:onClick="goBack"
-            android:layout_margin="5dp"
-            />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Share"
-            android:backgroundTint="#009900"
-            android:onClick="share"
-            android:layout_margin="5dp"
-            />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Edit"
-            android:backgroundTint="#FF9900"
-            android:onClick="openEdit"
-            android:layout_margin="5dp"
-            />
-    </LinearLayout>
-</RelativeLayout>
+</ScrollView>
