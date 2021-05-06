@@ -25,7 +25,10 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.ItemTouchHelper.*
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.easv.tkm.recipeapp.BuildConfig
 import com.easv.tkm.recipeapp.DAL.RecipeRepository
 import com.easv.tkm.recipeapp.R
@@ -56,6 +59,26 @@ class CrudActivity : AppCompatActivity(), IClickItemListener<IngredientEntry> {
     private lateinit var adapter: RecyclerAdapterIngredient
 
     private lateinit var recipe: Recipe
+
+    private val itemTouchHelper by lazy {
+        val simpleItemTouchCallback =
+            object : ItemTouchHelper.SimpleCallback(UP or DOWN or START or END, 0) {
+
+                override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+
+                    val adapter = recyclerView.adapter as RecyclerAdapterIngredient
+                    val from = viewHolder.adapterPosition
+                    val to = target.adapterPosition
+
+                    adapter.moveItem(from, to)
+                    adapter.notifyItemMoved(from, to)
+
+                    return true
+                }
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {}
+            }
+        ItemTouchHelper(simpleItemTouchCallback)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,12 +112,7 @@ class CrudActivity : AppCompatActivity(), IClickItemListener<IngredientEntry> {
 
         spCategories.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
 
-            override fun onItemSelected(
-                parent: AdapterView<*>,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
 
                 if (position != 0) {
                     selectedCategory = spCategories.selectedItem as Category
@@ -111,6 +129,7 @@ class CrudActivity : AppCompatActivity(), IClickItemListener<IngredientEntry> {
         recyclerView.layoutManager = LinearLayoutManager(this)
         adapter = RecyclerAdapterIngredient(this, this, this.ingredients)
         recyclerView.adapter = adapter
+        itemTouchHelper.attachToRecyclerView(recyclerView)
 
         recipeRepository.getCategories().observe(this, Observer { categories ->
             this.categories = categories.toMutableList()

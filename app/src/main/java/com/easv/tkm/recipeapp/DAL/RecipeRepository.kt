@@ -50,7 +50,7 @@ class RecipeRepository private constructor (context: Context){
         suspend { ingredientDAO.deleteIngredients(recipe.id.toLong()) }.invoke()
         suspend { recipeDAO.deleteRecipeIngredients(recipe.id.toLong()) }.invoke()
 
-        ingredients.forEach { ingredientEntry -> ingredientEntry.recipeID = recipe.id }
+        ingredients.forEach { ingredientEntry -> ingredientEntry.recipeID = recipe.id; ingredientEntry.id = 0 }
         val ingredientIDs = suspend {ingredientDAO.addIngredientEntries(ingredients)}.invoke().map {IDLong -> IDLong.toInt()}
         ingredientIDs.forEach { ingredientID -> recipeIngredient.add(RecipeIngredientEntry(recipe.id, ingredientID))}
         suspend { recipeDAO.addRecipeIngredient(recipeIngredient) }.invoke()
