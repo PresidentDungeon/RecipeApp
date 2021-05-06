@@ -51,6 +51,12 @@ class RecyclerAdapterIngredient: RecyclerView.Adapter<RecyclerHolderIngredient>{
         notifyDataSetChanged()
     }
 
+    fun moveItem(from: Int, to: Int){
+        var temp: IngredientEntry = ingredientList[to]
+        ingredientList[to] = ingredientList[from]
+        ingredientList[from] = temp
+    }
+
 }
 
 
