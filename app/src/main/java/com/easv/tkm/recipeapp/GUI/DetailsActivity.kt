@@ -88,7 +88,9 @@ class DetailsActivity : AppCompatActivity() {
 
         sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         sendIntent.type = "image/png"
-        sendIntent.putExtra("sms_body", preparedSMS())
+
+        sendIntent.putExtra(Intent.EXTRA_SUBJECT, "${recipe.title} recipe")
+        sendIntent.putExtra(Intent.EXTRA_TEXT, preparedSMS())
         startActivity(sendIntent)
     }
 
