@@ -16,6 +16,7 @@ import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.text.Editable
+import android.text.Html
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
@@ -229,7 +230,7 @@ class CrudActivity : AppCompatActivity(), IClickItemListener<IngredientEntry> {
         val alertDialogBuilder = AlertDialog.Builder(this)
         alertDialogBuilder.setTitle("Delete entry")
         alertDialogBuilder
-            .setMessage("Delete recipe ${recipe.title}?")
+            .setMessage(Html.fromHtml("Delete recipe <b>${recipe.title}</b>?"))
             .setCancelable(true)
             .setPositiveButton("Delete") { dialog, id -> deleteRecipe() }
             .setNegativeButton("Cancel", { dialog, id -> })
