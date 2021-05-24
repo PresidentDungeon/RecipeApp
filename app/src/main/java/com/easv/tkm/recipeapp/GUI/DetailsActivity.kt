@@ -55,21 +55,16 @@ class DetailsActivity : AppCompatActivity() {
         updateIngredients()
     }
 
-   /* private fun updateIngredients() {
-        var ingredientString = ""
-
-        ingredients.forEach{ ingredient -> ingredientString += "${ingredient.name}: ${ingredient.amount} ${ingredient.measurementUnit} \n" }
-        tvIngredients.setText(ingredientString)
-    }*/
-
     private fun updateIngredients() {
         var nameString = ""
         var amountString = ""
         var unitString = ""
 
-        ingredients.forEach{ ingredient -> nameString += "${ingredient.name}: \n" }
-        ingredients.forEach{ ingredient -> amountString += "${ingredient.amount} \n" }
-        ingredients.forEach{ ingredient -> unitString += "${ingredient.measurementUnit} \n" }
+        ingredients.forEach{ ingredient ->
+            nameString += "${ingredient.name}: \n"
+            amountString += "${ingredient.amount} \n"
+            unitString += "${ingredient.measurementUnit} \n"}
+
         inName.setText(nameString)
         inAmount.setText(amountString)
         inUnit.setText(unitString)

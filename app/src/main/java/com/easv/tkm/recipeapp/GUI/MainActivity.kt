@@ -38,9 +38,7 @@ class MainActivity : AppCompatActivity(), IClickItemListener<RecipeWithIngredien
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        registerForContextMenu(recyclerView)
         btnSearch.setOnClickListener { view -> searchText() }
-        recyclerView.layoutManager = LinearLayoutManager(this)
         adapter = RecyclerAdapter(this, this, this)
         recyclerView.adapter = adapter
         val manager = GridLayoutManager(this, 2)

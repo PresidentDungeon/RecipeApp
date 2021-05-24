@@ -23,7 +23,6 @@ class RecipeRepository private constructor (context: Context){
         }
     }
 
-
     private val database: Database = Room.databaseBuilder(context.applicationContext, Database::class.java, DATABASE_NAME).addCallback(CALLBACK).build()
 
     private val recipeDAO = database.recipeDAO()
@@ -34,8 +33,10 @@ class RecipeRepository private constructor (context: Context){
         val recipeIngredient: MutableList<RecipeIngredientEntry> = mutableListOf()
 
         val recipeID = suspend {recipeDAO.addRecipe(recipe)}.invoke().toInt()
+
         ingredients.forEach { ingredientEntry -> ingredientEntry.recipeID = recipeID }
         val ingredientIDs = suspend {ingredientDAO.addIngredientEntries(ingredients)}.invoke().map {IDLong -> IDLong.toInt()}
+
         ingredientIDs.forEach { ingredientID -> recipeIngredient.add(RecipeIngredientEntry(recipeID, ingredientID))}
         suspend { recipeDAO.addRecipeIngredient(recipeIngredient) }.invoke()
     }
